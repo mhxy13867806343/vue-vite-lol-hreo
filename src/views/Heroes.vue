@@ -1,120 +1,121 @@
 <template>
-  <div class="page-container" v-loading.fullscreen.lock="loading" element-loading-text="加载中...">
-    <game-nav />
-    <div class="heroes-container">
-      <div class="search-bar">
-        <el-input
-          v-model="searchQuery"
-          placeholder="搜索英雄"
-          :prefix-icon="Search"
-          clearable
-          @input="filterHeroes"
-        />
-      </div>
-      <div class="hero-tabs">
-        <el-tabs v-model="activeTab" @tab-change="filterHeroes">
-          <el-tab-pane label="所有英雄" name="all"></el-tab-pane>
-          <el-tab-pane label="战士" name="fighter"></el-tab-pane>
-          <el-tab-pane label="法师" name="mage"></el-tab-pane>
-          <el-tab-pane label="刺客" name="assassin"></el-tab-pane>
-          <el-tab-pane label="坦克" name="tank"></el-tab-pane>
-          <el-tab-pane label="射手" name="marksman"></el-tab-pane>
-          <el-tab-pane label="辅助" name="support"></el-tab-pane>
-        </el-tabs>
-      </div>
-      <transition-group name="hero-list" tag="div" class="heroes-grid">
-        <template v-if="!loading">
-          <template v-if="filteredHeroes.length">
-            <div v-for="hero in filteredHeroes" :key="hero.heroId" class="hero-card"
-          
-          @click="router.push(`/hero/${hero.heroId}`)"
-          >
-            <el-popover
-              placement="right"
-              :width="300"
-              trigger="hover"
-              popper-class="hero-popover"
+  <transition name="fade" appear>
+    <div class="page-container" v-loading.fullscreen.lock="loading" element-loading-text="加载中...">
+      <game-nav />
+      <div class="heroes-container">
+        <div class="search-bar">
+          <el-input
+            v-model="searchQuery"
+            placeholder="搜索英雄"
+            :prefix-icon="Search"
+            clearable
+          />
+        </div>
+        <div class="hero-tabs">
+          <el-tabs v-model="activeTab">
+            <el-tab-pane label="所有英雄" name="all"></el-tab-pane>
+            <el-tab-pane label="战士" name="fighter"></el-tab-pane>
+            <el-tab-pane label="法师" name="mage"></el-tab-pane>
+            <el-tab-pane label="刺客" name="assassin"></el-tab-pane>
+            <el-tab-pane label="坦克" name="tank"></el-tab-pane>
+            <el-tab-pane label="射手" name="marksman"></el-tab-pane>
+            <el-tab-pane label="辅助" name="support"></el-tab-pane>
+          </el-tabs>
+        </div>
+        <transition-group name="hero-list" tag="div" class="heroes-grid">
+          <template v-if="!loading">
+            <template v-if="filteredHeroes.length">
+              <div v-for="hero in filteredHeroes" :key="hero.heroId" class="hero-card"
+            
+            @click="router.push(`/hero/${hero.heroId}`)"
             >
-              <template #reference>
-                <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                  <el-image 
-                    :src="`https://game.gtimg.cn/images/lol/act/img/champion/${hero.alias}.png`"
-                    :alt="hero.name"
-                    lazy
-                    fit="cover"
-                  >
-                    <template #placeholder>
-                      <div class="image-placeholder">
-                        <el-icon><Picture /></el-icon>
-                      </div>
-                    </template>
-                    <template #error>
-                      <div class="image-error">
-                        <el-icon><Picture /></el-icon>
-                        <span>加载失败</span>
-                      </div>
-                    </template>
-                  </el-image>
-                  <div class="hero-info">
-                    <span class="hero-name">{{ hero.name }}</span>
-                    <span class="hero-title">{{ hero.title }}</span>
+              <el-popover
+                placement="right"
+                :width="300"
+                trigger="hover"
+                popper-class="hero-popover"
+              >
+                <template #reference>
+                  <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                    <el-image 
+                      :src="`https://game.gtimg.cn/images/lol/act/img/champion/${hero.alias}.png`"
+                      :alt="hero.name"
+                      lazy
+                      fit="cover"
+                    >
+                      <template #placeholder>
+                        <div class="image-placeholder">
+                          <el-icon><Picture /></el-icon>
+                        </div>
+                      </template>
+                      <template #error>
+                        <div class="image-error">
+                          <el-icon><Picture /></el-icon>
+                          <span>加载失败</span>
+                        </div>
+                      </template>
+                    </el-image>
+                    <div class="hero-info">
+                      <span class="hero-name">{{ hero.name }}</span>
+                      <span class="hero-title">{{ hero.title }}</span>
+                    </div>
+                  </el-card>
+                </template>
+                
+                <div class="hero-detail">
+                  <div class="hero-header">
+                    <img :src="'https://game.gtimg.cn/images/lol/act/img/champion/' + hero.alias + '.png'" :alt="hero.name" class="hero-avatar">
+                    <div class="hero-titles">
+                      <h3>{{ hero.name }}</h3>
+                      <p>{{ hero.title }}</p>
+                    </div>
                   </div>
-                </el-card>
-              </template>
-              
-              <div class="hero-detail">
-                <div class="hero-header">
-                  <img :src="'https://game.gtimg.cn/images/lol/act/img/champion/' + hero.alias + '.png'" :alt="hero.name" class="hero-avatar">
-                  <div class="hero-titles">
-                    <h3>{{ hero.name }}</h3>
-                    <p>{{ hero.title }}</p>
+                  <div class="hero-meta">
+                    <div class="meta-item">
+                      <label>关键词：</label>
+                      <div class="meta-content">{{ hero.keywords }}</div>
+                    </div>
+                    <div class="meta-item">
+                      <label>标签：</label>
+                      <div class="meta-content">{{ hero.changeLabel }}</div>
+                    </div>
+                    <div class="meta-item">
+                      <label>金币价格：</label>
+                      <div class="meta-content">{{ hero.goldPrice }}</div>
+                    </div>
+                    <div class="meta-item">
+                      <label>点券价格：</label>
+                      <div class="meta-content">{{ hero.couponPrice }}</div>
+                    </div>
+                  </div>
+                  <div class="hero-actions">
+                    <el-button 
+                      type="primary" 
+                      link 
+                      @click="router.push(`/hero/${hero.heroId}`)"
+                    >
+                      查看详情
+                    </el-button>
                   </div>
                 </div>
-                <div class="hero-meta">
-                  <div class="meta-item">
-                    <label>关键词：</label>
-                    <div class="meta-content">{{ hero.keywords }}</div>
-                  </div>
-                  <div class="meta-item">
-                    <label>标签：</label>
-                    <div class="meta-content">{{ hero.changeLabel }}</div>
-                  </div>
-                  <div class="meta-item">
-                    <label>金币价格：</label>
-                    <div class="meta-content">{{ hero.goldPrice }}</div>
-                  </div>
-                  <div class="meta-item">
-                    <label>点券价格：</label>
-                    <div class="meta-content">{{ hero.couponPrice }}</div>
-                  </div>
-                </div>
-                <div class="hero-actions">
-                  <el-button 
-                    type="primary" 
-                    link 
-                    @click="router.push(`/hero/${hero.heroId}`)"
-                  >
-                    查看详情
-                  </el-button>
-                </div>
-              </div>
-            </el-popover>
+              </el-popover>
+            </div>
+          </template>
+          <div v-else class="empty-state">
+            <el-empty description="暂无英雄" />
           </div>
         </template>
-        <div v-else class="empty-state">
-          <el-empty description="暂无英雄" />
-        </div>
-      </template>
-    </transition-group>
+      </transition-group>
+    </div>
   </div>
-</div>
+</transition>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { ElMessage, ElLoading } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Search, Picture } from '@element-plus/icons-vue'
 import GameNav from '../components/GameNav.vue'
 
@@ -123,17 +124,18 @@ const heroes = ref([])
 const searchQuery = ref('')
 const activeTab = ref('all')
 const filteredHeroes = ref([])
-const loading = ref(true)
+const loading = ref(false)
 
 const getHeroes = async () => {
+  if (heroes.value.length === 0) {
+    loading.value = true
+  }
+  
   try {
     const response = await axios.get('https://game.gtimg.cn/images/lol/act/img/js/heroList/hero_list.js?v=04')
     if (response.data && response.data.hero) {
       heroes.value = response.data.hero
-      console.log('First hero:', response.data.hero[0])
       filterHeroes()
-    } else {
-      console.error('Invalid hero data structure:', response.data)
     }
   } catch (error) {
     ElMessage.error('获取英雄数据失败')
@@ -153,7 +155,7 @@ const roleMapping = {
 }
 
 const filterHeroes = () => {
-  let filtered = [...(heroes.value || [])]
+  let filtered = [...heroes.value]
   
   // 搜索过滤
   if (searchQuery.value) {
@@ -174,31 +176,28 @@ const filterHeroes = () => {
   filteredHeroes.value = filtered
 }
 
-// 监听标签页变化
-watch(activeTab, (newTab) => {
-  console.log('Tab changed to:', newTab)
-  filterHeroes()
-})
-
-// 监听搜索输入
-watch(searchQuery, (newQuery) => {
-  console.log('Search query changed to:', newQuery)
+// 监听搜索和标签变化
+watch([searchQuery, activeTab], () => {
   filterHeroes()
 })
 
 onMounted(() => {
-  console.log('Component mounted, fetching heroes...')
+  filteredHeroes.value = []
   getHeroes()
-  
-  // 添加路由导航守卫
-  history.pushState(null, null, location.href)
-  window.addEventListener('popstate', () => {
-    history.pushState(null, null, location.href)
-  })
 })
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .page-container {
   min-height: 100vh;
   background: #f5f7fa;

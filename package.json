@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
+    "puppeteer": "^23.11.1",
     "sass": "^1.83.0",
     "unplugin-auto-import": "0.16.6",
     "unplugin-compression": "0.0.5",
