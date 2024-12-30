@@ -3,7 +3,7 @@ import Heroes from '../views/Heroes.vue'
 import HeroDetail from '../views/HeroDetail.vue'
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+                              history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
