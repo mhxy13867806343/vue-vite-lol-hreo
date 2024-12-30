@@ -1,10 +1,9 @@
-# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
+      - main  # 或者你使用的主分支名称
 
 jobs:
   build-and-deploy:
@@ -30,3 +29,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # 如果你的仓库不是用户或组织页面，可能需要设置 a `CNAME` 或其他选项
