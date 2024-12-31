@@ -22,6 +22,7 @@
     "unplugin-auto-import": "0.16.6",
     "unplugin-compression": "0.0.5",
     "unplugin-element-plus": "^0.9.0",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "gh-pages": "^3.2.3"
   }
 }
