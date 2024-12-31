@@ -6,10 +6,7 @@ import ElementPlus from 'unplugin-element-plus/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-                                base: '/vue-vite-lol-hreo/', // 替换为你的仓库名称
-                                build: {
-                                    outDir: 'dist',
-                                },
+                                base: './', // 替换为你的仓库名称
                               plugins: [
     vue(),
     AutoImport({
